@@ -46,7 +46,7 @@ regd_users.post("/login", (req,res) => {
         // Generate JWT access token
         let accessToken = jwt.sign({
             data: password
-        }, 'access', { expiresIn: 60 });
+        }, 'access', { expiresIn: 60 * 60 * 10 }); // Extend lifetime for development
 
         // Store access token and username in session
         req.session.authorization = {
@@ -63,13 +63,30 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const reviews = books[isbn].reviews;
   const newReview = req.body.review;
+  const username = req.session.authorization.username;
 
-  if(newReview) {
-    reviews[reviews.length] = newReview;
+  if(newReview && username) {
+    reviews[username] = newReview;
     books[isbn].reviews = reviews;
     return res.status(200).json({message: "Review added successfully"});
   } else {
     return res.status(400).json({message: "Review not added"});
+  }
+});
+
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const isbn = req.params.isbn;
+  const reviews = books[isbn].reviews;
+  const username = req.session.authorization.username;
+  const reviewToDelete = reviews[username];
+
+  if(reviewToDelete && username) {
+    delete reviews[username];
+    books[isbn].reviews = reviews;
+    return res.status(200).json({message: "Review deleted successfully"});
+  } else {
+    return res.status(400).json({message: "Review not deleted"});
   }
 });
 
