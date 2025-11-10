@@ -37,15 +37,15 @@ public_users.get('/isbn/:isbn',function (req, res) {
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  const author = req.params.author;
-  const booksByAuthor = Object.values(books).filter(book => book.author === author);
+  const author = req.params.author.toLowerCase();
+  const booksByAuthor = Object.values(books).filter(book => book.author.toLowerCase() === author);
   res.send(booksByAuthor);
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  const title = req.params.title;
-  const booksByTitle = Object.values(books).filter(book => book.title === title);
+  const title = req.params.title.toLowerCase();
+  const booksByTitle = Object.values(books).filter(book => book.title.toLowerCase() === title);
   res.send(booksByTitle);
 });
 
