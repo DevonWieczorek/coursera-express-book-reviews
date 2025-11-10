@@ -24,8 +24,14 @@ public_users.post("/register", (req,res) => {
     return res.status(404).json({message: "Unable to register user."});
 });
 
+// Simulate reading from db
+// const getAllBooks = () => new Promise((resolve, reject) => {
+//   return setTimeout(() => resolve(books), 500);
+// });
+
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/',async function (req, res) {
+  // const allBooks = await getAllBooks();
   res.send(JSON.stringify(books,null,4));
 });
 
